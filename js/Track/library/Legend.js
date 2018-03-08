@@ -20,7 +20,7 @@ Genoverse.Track.Model.Legend = Genoverse.Track.Model.Static.extend({
     var bounds   = { x: this.browser.scaledStart, y: 0, w: this.width };
     var features = {};
 
-    $.each($.map(this.track.tracks, function (track) {
+    this.$jq.each(this.$jq.map(this.track.tracks, function (track) {
       var featurePositions = track.prop('featurePositions');
       bounds.h = track.prop('height');
       return featurePositions ? featurePositions.search(bounds).concat(track.prop('labelPositions').search(bounds)) : [];
@@ -30,7 +30,7 @@ Genoverse.Track.Model.Legend = Genoverse.Track.Model.Static.extend({
       }
     });
 
-    return this.sortFeatures($.map(features, function (color, text) { return [[ text, color ]]; }));
+    return this.sortFeatures(this.$jq.map(features, function (color, text) { return [[ text, color ]]; }));
   },
 
   sortFeatures: function (features) {
@@ -182,7 +182,7 @@ Genoverse.Track.Legend = Genoverse.Track.Static.extend({
     var legend = this;
     var type   = this.type;
 
-    this.tracks = $.map(this.browser.tracks.filter(function (t) {
+    this.tracks = this.$jq.map(this.browser.tracks.filter(function (t) {
       if (t.legendType === type) {
         t.legendTrack = t.legendTrack || legend;
         return true;

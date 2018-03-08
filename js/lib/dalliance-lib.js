@@ -2857,7 +2857,8 @@
         }
       });
     } else {
-      return $.Deferred().resolve(this.url);
+      var url = this.url;
+      return new Promise(function (resolve) { resolve(url) });
     }
   };
 

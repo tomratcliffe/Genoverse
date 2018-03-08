@@ -18,7 +18,7 @@ Genoverse.Track.View = Base.extend({
   subFeatureJoinLineWidth : 0.5,
 
   constructor: function (properties) {
-    $.extend(this, properties);
+    Genoverse.$jq.extend(this, properties);
     Genoverse.wrapFunctions(this);
     this.init();
   },
@@ -40,7 +40,7 @@ Genoverse.Track.View = Base.extend({
       }
     }
 
-    this.context       = $('<canvas>')[0].getContext('2d');
+    this.context       = this.$jq('<canvas>')[0].getContext('2d');
     this.featureHeight = typeof this.featureHeight !== 'undefined' ? this.featureHeight : this.prop('defaultHeight');
     this.font          = this.fontWeight + ' ' + this.fontHeight + 'px ' + this.fontFamily;
     this.labelUnits    = [ 'bp', 'kb', 'Mb', 'Gb', 'Tb' ];
@@ -63,7 +63,7 @@ Genoverse.Track.View = Base.extend({
       var featurePositions = new RTree();
 
       this.scaleSettings[chr][scale] = {
-        imgContainers    : $(),
+        imgContainers    : this.$jq(),
         featurePositions : featurePositions,
         labelPositions   : this.labels === 'separate' ? new RTree() : featurePositions
       };
@@ -158,7 +158,7 @@ Genoverse.Track.View = Base.extend({
         var context = this.context;
 
         feature.labelHeight = feature.labelHeight || (this.fontHeight + 2) * feature.label.length;
-        feature.labelWidth  = feature.labelWidth  || Math.max.apply(Math, $.map(feature.label, function (l) { return Math.ceil(context.measureText(l).width); })) + 1;
+        feature.labelWidth  = feature.labelWidth  || Math.max.apply(Math, this.$jq.map(feature.label, function (l) { return Math.ceil(context.measureText(l).width); })) + 1;
 
         if (this.labels === true) {
           feature.position[scale].H += feature.labelHeight;
@@ -201,7 +201,7 @@ Genoverse.Track.View = Base.extend({
       subFeatures[i].position[scale].y = feature.position[scale].Y + (feature.position[scale].height - subFeatures[i].position[scale].height) / 2;
 
       if (join && subFeatures[i + 1]) {
-        $.extend(subFeatures[i].position[scale].join, { width: subFeatures[i + 1].position[scale].x - subFeatures[i].position[scale].join.x }, join);
+        this.$jq.extend(subFeatures[i].position[scale].join, { width: subFeatures[i + 1].position[scale].x - subFeatures[i].position[scale].join.x }, join);
       }
     }
 
@@ -231,7 +231,7 @@ Genoverse.Track.View = Base.extend({
 
     do {
       if (this.depth && ++depth >= this.depth) {
-        if (!labels && $.grep(scaleSettings.featurePositions.search(bounds), function (f) { return f.position[scale].visible !== false; }).length) {
+        if (!labels && this.$jq.grep(scaleSettings.featurePositions.search(bounds), function (f) { return f.position[scale].visible !== false; }).length) {
           feature.position[scale].visible = false;
         }
 
@@ -260,7 +260,7 @@ Genoverse.Track.View = Base.extend({
 
       if (feature.position[scale].visible !== false) {
         // TODO: extend with feature.position[scale], rationalize keys
-        f = $.extend({}, feature, {
+        f = this.$jq.extend({}, feature, {
           x             : feature.position[scale].X,
           y             : feature.position[scale].Y,
           width         : feature.position[scale].width,
@@ -315,16 +315,16 @@ Genoverse.Track.View = Base.extend({
   },
 
   drawSubFeatures: function (feature, featureContext, labelContext, scale) {
-    var subFeatures = $.extend(true, [], feature.subFeatures);
+    var subFeatures = this.$jq.extend(true, [], feature.subFeatures);
     var joinColor   = feature.joinColor || feature.color;
 
     for (var i = 0; i < subFeatures.length; i++) {
       if (!subFeatures[i].fake) {
-        this.drawFeature($.extend(true, {}, feature, { subFeatures: false, label: false }, subFeatures[i].position[scale], subFeatures[i]), featureContext, labelContext, scale);
+        this.drawFeature(this.$jq.extend(true, {}, feature, { subFeatures: false, label: false }, subFeatures[i].position[scale], subFeatures[i]), featureContext, labelContext, scale);
       }
 
       if (subFeatures[i].position[scale].join && subFeatures[i].position[scale].join.width > 0) {
-        this.drawSubFeatureJoin($.extend({ color: joinColor }, subFeatures[i].position[scale].join), featureContext);
+        this.drawSubFeatureJoin(this.$jq.extend({ color: joinColor }, subFeatures[i].position[scale].join), featureContext);
       }
     }
   },
@@ -540,6 +540,6 @@ Genoverse.Track.View = Base.extend({
     return Math.floor(label) + (unit === 'bp' ? '' : '.' + (label.toString().split('.')[1] || '').concat('00').substring(0, 2)) + ' ' + unit;
   },
 
-  drawBackground  : $.noop,
-  decorateFeature : $.noop // decoration for the features
+  drawBackground  : function () {},
+  decorateFeature : function () {} // decoration for the features
 });

@@ -5,7 +5,7 @@ Genoverse.Track.Controller = Base.extend({
   messages       : undefined,
 
   constructor: function (properties) {
-    $.extend(this, properties);
+    Genoverse.$jq.extend(this, properties);
     Genoverse.wrapFunctions(this);
     this.init();
   },
@@ -57,7 +57,7 @@ Genoverse.Track.Controller = Base.extend({
 
   setName: function (name) {
     this.track.name = name;
-    this.labelName  = this.labelName || $('<span class="gv-name">').appendTo(this.label);
+    this.labelName  = this.labelName || this.$jq('<span class="gv-name">').appendTo(this.label);
 
     this.labelName.attr('title', name).html(name);
 
@@ -69,26 +69,26 @@ Genoverse.Track.Controller = Base.extend({
   addDomElements: function () {
     var name = this.track.name || '';
 
-    this.menus            = $();
-    this.container        = $('<div class="gv-track-container">').appendTo(this.browser.wrapper);
-    this.scrollContainer  = $('<div class="gv-scroll-container">').appendTo(this.container);
-    this.imgContainer     = $('<div class="gv-image-container">').width(this.width).addClass(this.prop('invert') ? 'gv-invert' : '');
-    this.messageContainer = $('<div class="gv-message-container"><div class="gv-messages"></div><i class="gv-control gv-collapse fa fa-angle-double-left"></i><i class="gv-control gv-expand fa fa-angle-double-right"></i></div>').appendTo(this.container);
-    this.label            = $('<li>').appendTo(this.browser.labelContainer).height(this.prop('height')).data('track', this.track);
-    this.context          = $('<canvas>')[0].getContext('2d');
+    this.menus            = this.$jq();
+    this.container        = this.$jq('<div class="gv-track-container">').appendTo(this.browser.wrapper);
+    this.scrollContainer  = this.$jq('<div class="gv-scroll-container">').appendTo(this.container);
+    this.imgContainer     = this.$jq('<div class="gv-image-container">').width(this.width).addClass(this.prop('invert') ? 'gv-invert' : '');
+    this.messageContainer = this.$jq('<div class="gv-message-container"><div class="gv-messages"></div><i class="gv-control gv-collapse fa fa-angle-double-left"></i><i class="gv-control gv-expand fa fa-angle-double-right"></i></div>').appendTo(this.container);
+    this.label            = this.$jq('<li>').appendTo(this.browser.labelContainer).height(this.prop('height')).data('track', this.track);
+    this.context          = this.$jq('<canvas>')[0].getContext('2d');
 
     if (this.prop('border')) {
-      $('<div class="gv-track-border">').appendTo(this.container);
+      this.$jq('<div class="gv-track-border">').appendTo(this.container);
     }
 
     if (this.prop('unsortable')) {
       this.label.addClass('gv-unsortable');
     } else {
-      $('<div class="gv-handle">').appendTo(this.label);
+      this.$jq('<div class="gv-handle">').appendTo(this.label);
     }
 
     if (this.prop('children')) {
-      this.superContainer = $('<div class="gv-track-container gv-track-super-container">').insertAfter(this.container);
+      this.superContainer = this.$jq('<div class="gv-track-container gv-track-super-container">').insertAfter(this.container);
       this.container.appendTo(this.superContainer);
     } else if (this.prop('parentTrack')) {
       this.superContainer = this.prop('parentTrack').prop('superContainer');
@@ -130,7 +130,7 @@ Genoverse.Track.Controller = Base.extend({
   },
 
   click: function (e) {
-    var target = $(e.target);
+    var target = this.$jq(e.target);
     var x      = e.pageX - this.container.parent().offset().left + this.browser.scaledStart;
     var y      = e.pageY - target.offset().top;
 
@@ -165,10 +165,10 @@ Genoverse.Track.Controller = Base.extend({
     var messages = this.messageContainer.children('.gv-messages');
 
     if (!messages.children('.gv-' + code).show().length) {
-      var msg = $('<div class="gv-msg gv-' + code + '">' + this.messages[code] + (additionalText || '') + '</div>').data('code', code).prependTo(messages);
+      var msg = this.$jq('<div class="gv-msg gv-' + code + '">' + this.messages[code] + (additionalText || '') + '</div>').data('code', code).prependTo(messages);
 
       if (code === 'resize') {
-        msg.children('a.gv-resize').on('click', $.proxy(function () {
+        msg.children('a.gv-resize').on('click', this.$jq.proxy(function () {
           this.resize(this.fullVisibleHeight);
         }, this));
       }
@@ -243,11 +243,11 @@ Genoverse.Track.Controller = Base.extend({
     var scale     = this.scale;
     var features  = this.featurePositions.search(bounds);
     var minHeight = this.prop('hideEmpty') ? 0 : this.minLabelHeight;
-    var height    = Math.max.apply(Math, $.map(features, function (feature) { return feature.position[scale].bottom; }).concat(minHeight));
+    var height    = Math.max.apply(Math, this.$jq.map(features, function (feature) { return feature.position[scale].bottom; }).concat(minHeight));
 
     if (this.prop('labels') === 'separate') {
       this.labelTop = height;
-      height += Math.max.apply(Math, $.map(this.labelPositions.search(bounds).concat(this.prop('repeatLabels') ? features : []), function (feature) { return feature.position[scale].label.bottom; }).concat(minHeight));
+      height += Math.max.apply(Math, this.$jq.map(this.labelPositions.search(bounds).concat(this.prop('repeatLabels') ? features : []), function (feature) { return feature.position[scale].label.bottom; }).concat(minHeight));
     }
 
     return height;
@@ -302,7 +302,7 @@ Genoverse.Track.Controller = Base.extend({
         this.resize(h, undefined, saveConfig);
       }
 
-      this.expander = (this.expander || $('<div class="gv-expander gv-static">').width(this.width).appendTo(this.container).on('click', function () {
+      this.expander = (this.expander || this.$jq('<div class="gv-expander gv-static">').width(this.width).appendTo(this.container).on('click', function () {
         controller.resize(controller.fullVisibleHeight);
       }))[this.prop('height') === 0 ? 'hide' : 'show']();
     } else if (this.expander) {
@@ -338,7 +338,7 @@ Genoverse.Track.Controller = Base.extend({
   setWidth: function (width) {
     var track = this.track;
 
-    $.each([ this, track, track.model, track.view ], function () {
+    this.$jq.each([ this, track, track.model, track.view ], function () {
       this.width = width;
     });
 
@@ -363,7 +363,7 @@ Genoverse.Track.Controller = Base.extend({
       this.thresholdMessage = this.view.formatLabel(this.threshold);
     }
 
-    $.each(this.view.setScaleSettings(this.scale), function (k, v) { controller[k] = v; });
+    this.$jq.each(this.view.setScaleSettings(this.scale), function (k, v) { controller[k] = v; });
 
     this.hideMessage();
   },
@@ -429,12 +429,13 @@ Genoverse.Track.Controller = Base.extend({
 
     var deferred;
     var controller = this;
+    var $jq        = this.$jq;
     var tooLarge   = this.browser.length > this.threshold;
     var div        = this.imgContainer.clone().addClass((params.cls + ' gv-loading').replace('.', '_')).css({ left: params.left, display: params.cls === this.scrollStart ? 'block' : 'none' });
-    var bgImage    = params.background ? $('<img class="gv-bg">').hide().addClass(params.background).data(params).prependTo(div) : false;
-    var image      = $('<img class="gv-data">').hide().data(params).appendTo(div).on('load', function () {
-      $(this).fadeIn('fast').parent().removeClass('gv-loading');
-      $(this).siblings('.gv-bg').show();
+    var bgImage    = params.background ? $jq('<img class="gv-bg">').hide().addClass(params.background).data(params).prependTo(div) : false;
+    var image      = $jq('<img class="gv-data">').hide().data(params).appendTo(div).on('load', function () {
+      $jq(this).fadeIn('fast').parent().removeClass('gv-loading');
+      $jq(this).siblings('.gv-bg').show();
     });
 
     params.container = div;
@@ -451,8 +452,8 @@ Genoverse.Track.Controller = Base.extend({
     }
 
     if (!deferred) {
-      deferred = $.Deferred();
-      setTimeout($.proxy(deferred.resolve, this), 1); // This defer makes scrolling A LOT smoother, pushing render call to the end of the exec queue
+      deferred = $jq.Deferred();
+      setTimeout($jq.proxy(deferred.resolve, this), 1); // This defer makes scrolling A LOT smoother, pushing render call to the end of the exec queue
     }
 
     this.deferreds.push(deferred);
@@ -470,7 +471,8 @@ Genoverse.Track.Controller = Base.extend({
   },
 
   makeFirstImage: function (moveTo) {
-    var deferred = $.Deferred();
+    var $jq      = this.$jq;
+    var deferred = $jq.Deferred();
 
     if (this.scrollContainer.children().hide().filter('.' + (moveTo || this.scrollStart)).show().length) {
       this.scrollContainer.css('left', 0);
@@ -506,7 +508,7 @@ Genoverse.Track.Controller = Base.extend({
     var loading = this.imgContainer.clone().addClass('gv-loading').css({ left: left, width: width }).prependTo(this.scrollContainer.css('left', 0));
 
     function makeImages() {
-      $.when.apply($, images.map(function (image) {
+      $jq.when.apply($jq, images.map(function (image) {
         return controller.makeImage(image);
       })).done(deferred.resolve);
 
@@ -529,7 +531,7 @@ Genoverse.Track.Controller = Base.extend({
   render: function (features, img) {
     var params         = img.data();
         features       = this.view.positionFeatures(this.view.scaleFeatures(features, params.scale), params); // positionFeatures alters params.featureHeight, so this must happen before the canvases are created
-    var featureCanvas  = $('<canvas>').attr({ width: params.width, height: params.featureHeight || 1 });
+    var featureCanvas  = this.$jq('<canvas>').attr({ width: params.width, height: params.featureHeight || 1 });
     var labelCanvas    = this.prop('labels') === 'separate' && params.labelHeight ? featureCanvas.clone().attr('height', params.labelHeight) : featureCanvas;
     var featureContext = featureCanvas[0].getContext('2d');
     var labelContext   = labelCanvas[0].getContext('2d');
@@ -556,14 +558,14 @@ Genoverse.Track.Controller = Base.extend({
   },
 
   renderBackground: function (features, img, height) {
-    var canvas = $('<canvas>').attr({ width: this.width, height: height || 1 })[0];
+    var canvas = this.$jq('<canvas>').attr({ width: this.width, height: height || 1 })[0];
     this.view.drawBackground(features, canvas.getContext('2d'), img.data());
     img.attr('src', canvas.toDataURL());
     canvas = img = null;
   },
 
   populateMenu: function (feature) {
-    var f    = $.extend(true, {}, feature);
+    var f    = this.$jq.extend(true, {}, feature);
     var menu = {
       title    : f.label ? f.label[0] : f.id,
       Location : f.chr + ':' + f.start + '-' + f.end
@@ -580,7 +582,7 @@ Genoverse.Track.Controller = Base.extend({
       }
     }
 
-    return $.extend(menu, f);
+    return this.$jq.extend(menu, f);
   },
 
   abort: function () {

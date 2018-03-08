@@ -24,7 +24,7 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
 
   addHighlights: function (highlights) {
     for (var i = 0; i < highlights.length; i++) {
-      this.model.insertFeature($.extend({ label: (highlights[i].start + '-' + highlights[i].end) }, highlights[i]));
+      this.model.insertFeature(this.$jq.extend({ label: (highlights[i].start + '-' + highlights[i].end) }, highlights[i]));
     }
 
     this.reset();
@@ -35,7 +35,7 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
     var featuresById  = this.prop('featuresById');
     var features, bounds, h;
 
-    highlights = highlights || $.map(featuresById, function (f) { return f; });
+    highlights = highlights || this.$jq.map(featuresById, function (f) { return f; });
 
     for (var i = 0; i < highlights.length; i++) {
       if (highlights[i].removable === false) {
@@ -48,7 +48,7 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
       // RTree.remove only works if the second argument (the object to be removed) === the object found in the tree.
       // Here, while highlight is effectively the same object as the one in the tree, it has been cloned, so the === check fails.
       // To fix this, search for the feature to remove in the location of highlight.
-      h = $.grep(features.search(bounds), function (item) { return item.id === highlights[i].id; });
+      h = this.$jq.grep(features.search(bounds), function (item) { return item.id === highlights[i].id; });
 
       if (h.length) {
         features.remove(bounds, h[0]);
@@ -141,13 +141,14 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
       }
 
       var menuEl = this.base.apply(this, arguments);
+      var $jq    = this.$jq;
 
       if (menuEl && !menuEl.data('highlightEvents')) {
         var track = this.track;
 
         menuEl.find('.gv-remove-highlight').on('click', function () {
-          var id = $(this).data('id');
-          track.removeHighlights($.grep(menuEl.data('feature'), function (f) { return f.id === id; }));
+          var id = $jq(this).data('id');
+          track.removeHighlights($jq.grep(menuEl.data('feature'), function (f) { return f.id === id; }));
           return false;
         });
 
@@ -157,7 +158,7 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
         });
 
         menuEl.find('.gv-focus-highlight').on('click', function () {
-          var data    = $(this).data();
+          var data    = $jq(this).data();
           var length  = data.end - data.start + 1;
           var context = Math.max(Math.round(length / 4), 25);
 
@@ -173,11 +174,11 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
     getClickedFeatures: function (x, y, target) {
       var seen     = {};
       var scale    = this.scale;
-      var features = $.grep(
+      var features = this.$jq.grep(
         // feature positions
         this.featurePositions.search({ x: x, y: y, w: 1, h: 1 }).concat(
           // plus label positions where the labels are visible
-          $.grep(this.labelPositions.search({ x: x, y: y, w: 1, h: 1 }), function (f) {
+          this.$jq.grep(this.labelPositions.search({ x: x, y: y, w: 1, h: 1 }), function (f) {
             return f.position[scale].label.visible !== false;
           })
         ), function (f) {
@@ -246,7 +247,7 @@ Genoverse.Track.HighlightRegion = Genoverse.Track.extend({
       for (var i = 0; i < features.length; i++) {
         context.fillStyle = features[i].color;
 
-        this.drawFeature($.extend(true, {}, features[i], {
+        this.drawFeature(this.$jq.extend(true, {}, features[i], {
           x           : features[i].position[params.scale].X,
           y           : 0,
           width       : features[i].position[params.scale].width,

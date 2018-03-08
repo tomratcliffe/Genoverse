@@ -9,7 +9,7 @@ Genoverse.Track.Model = Base.extend({
   dataRequestLimit : undefined, // if defined, multiple requests will be made by getData if the region size exceeds its value
 
   constructor: function (properties) {
-    $.extend(this, properties);
+    Genoverse.$jq.extend(this, properties);
     Genoverse.wrapFunctions(this);
     this.init();
   },
@@ -79,7 +79,7 @@ Genoverse.Track.Model = Base.extend({
     start = Math.max(1, start);
     end   = Math.min(this.browser.getChromosomeSize(chr), end);
 
-    var deferred = $.Deferred();
+    var deferred = this.$jq.Deferred();
 
     if (typeof this.data !== 'undefined') {
       this.receiveData(typeof this.data.sort === 'function' ? this.data.sort(function (a, b) { return a.start - b.start; }) : this.data, chr, start, end);
@@ -87,6 +87,7 @@ Genoverse.Track.Model = Base.extend({
     }
 
     var model  = this;
+    var $jq    = this.$jq;
     var bins   = [];
     var length = end - start + 1;
 
@@ -105,8 +106,8 @@ Genoverse.Track.Model = Base.extend({
       bins.push([ start, end ]);
     }
 
-    $.when.apply($, $.map(bins, function (bin) {
-      var request = $.ajax({
+    $jq.when.apply($jq, $jq.map(bins, function (bin) {
+      var request = $jq.ajax({
         url       : model.parseURL(chr, bin[0], bin[1]),
         data      : model.urlParams,
         dataType  : model.dataType,
@@ -114,7 +115,7 @@ Genoverse.Track.Model = Base.extend({
         xhrFields : model.xhrFields,
         success   : function (data) { this.receiveData(data, chr, bin[0], bin[1]); },
         error     : function (xhr, statusText) { this.track.controller.showError(statusText + ' while getting the data, see console for more details', arguments); },
-        complete  : function (xhr) { this.dataLoading = $.grep(this.dataLoading, function (t) { return xhr !== t; }); }
+        complete  : function (xhr) { this.dataLoading = $jq.grep(this.dataLoading, function (t) { return xhr !== t; }); }
       });
 
       request.coords = [ chr, bin[0], bin[1] ]; // store actual chr, start and end on the request, in case they are needed
@@ -224,7 +225,7 @@ Genoverse.Track.Model = Base.extend({
 
     // Make sure we have a unique ID, this method is not efficient, so better supply your own id
     if (!feature.id) {
-      feature.id = feature.ID || this.hashCode(JSON.stringify($.extend({}, feature, { sort: '' }))); // sort is dependant on the browser's region, so will change on zoom
+      feature.id = feature.ID || this.hashCode(JSON.stringify(this.$jq.extend({}, feature, { sort: '' }))); // sort is dependant on the browser's region, so will change on zoom
     }
 
     var features = this.features(feature.chr);
@@ -253,7 +254,7 @@ Genoverse.Track.Model = Base.extend({
     var filters  = this.prop('featureFilters') || [];
 
     for (var i = 0; i < filters.length; i++) {
-      features = $.grep(features, $.proxy(filters[i], this));
+      features = this.$jq.grep(features, this.$jq.proxy(filters[i], this));
     }
 
     return this.sortFeatures(features);

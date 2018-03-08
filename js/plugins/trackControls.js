@@ -1,7 +1,8 @@
 Genoverse.Plugins.trackControls = function () {
+  var $jq             = Genoverse.$jq;
   var defaultControls = [
-    $('<a title="More info" class="fa fa-info-circle">').on('click', function () {
-      var track = $(this).data('track');
+    $jq('<a title="More info" class="fa fa-info-circle">').on('click', function () {
+      var track = $jq(this).data('track');
       var menu  = track.prop('menus').filter('.gv-track-info');
 
       if (!menu.length) {
@@ -14,7 +15,7 @@ Genoverse.Plugins.trackControls = function () {
       menu.show().position({ of: track.prop('container'), at: 'center top', my: 'center top', collision: 'none' });
     }),
 
-    $([
+    $jq([
       '<a class="gv-height-toggle">',
         '<i class="fa fa-sort"></i>',
         '<i class="fa fa-sort-desc"></i>',
@@ -22,7 +23,7 @@ Genoverse.Plugins.trackControls = function () {
       '</a>'
     ].join('')).on({
       click: function () {
-        var track = $(this).data('track');
+        var track = $jq(this).data('track');
         var height;
 
         if (track.prop('autoHeight', !track.prop('autoHeight'))) {
@@ -32,17 +33,17 @@ Genoverse.Plugins.trackControls = function () {
           height = track.prop('heightBeforeToggle') || track.prop('initialHeight');
         }
 
-        $(this).trigger('toggleState');
+        $jq(this).trigger('toggleState');
 
         track.controller.resize(height, true);
       },
       toggleState: function () { // custom event to set title and change the icon
-        var track      = $(this).data('track');
+        var track      = $jq(this).data('track');
         var autoHeight = track.prop('autoHeight');
         var resizer    = track.prop('resizer');
 
         this.title = autoHeight ? 'Set track to fixed height' : 'Set track to auto-adjust height';
-        $(this)[autoHeight ? 'addClass' : 'removeClass']('gv-auto-height');
+        $jq(this)[autoHeight ? 'addClass' : 'removeClass']('gv-auto-height');
 
         if (resizer) {
           resizer[autoHeight ? 'hide' : 'show']();
@@ -51,17 +52,17 @@ Genoverse.Plugins.trackControls = function () {
     })
   ];
 
-  var remove = $('<a title="Remove track" class="fa fa-trash">').on('click', function () {
-    $(this).data('track').remove();
+  var remove = $jq('<a title="Remove track" class="fa fa-trash">').on('click', function () {
+    $jq(this).data('track').remove();
   });
 
-  var toggle = $([
+  var toggle = $jq([
     '<a class="gv-track-controls-toggle">',
       '<span><i class="fa fa-angle-double-left"></i><i class="fa fa-cog"></i></span>',
       '<span><i class="fa fa-angle-double-right"></i></span>',
     '</a>'
   ].join('')).on('click', function () {
-    $(this).parent().toggleClass('gv-maximized');
+    $jq(this).parent().toggleClass('gv-maximized');
   });
 
   this.on({
@@ -78,13 +79,13 @@ Genoverse.Plugins.trackControls = function () {
 
       controls = (controls || []).concat(defaultControls, this.prop('removable') === false ? [] : remove);
 
-      this.trackControls = $('<div class="gv-track-controls">').prependTo(this.container);
+      this.trackControls = $jq('<div class="gv-track-controls">').prependTo(this.container);
 
-      var controlsContainer = $('<div class="gv-track-controls-container">').appendTo(this.trackControls);
+      var controlsContainer = $jq('<div class="gv-track-controls-container">').appendTo(this.trackControls);
 
       for (var i = 0; i < controls.length; i++) {
-        if ($.isPlainObject(controls[i]) && controls[i].type) {
-          el = $('<' + controls[i].type + '>').data('control', controls[i].name);
+        if ($jq.isPlainObject(controls[i]) && controls[i].type) {
+          el = $jq('<' + controls[i].type + '>').data('control', controls[i].name);
 
           if (controls[i].options) {
             for (j = 0; j < controls[i].options.length; j++) {
@@ -92,8 +93,8 @@ Genoverse.Plugins.trackControls = function () {
             }
           }
         } else if (typeof controls[i] === 'string') {
-          el = $(controls[i]);
-        } else if (typeof controls[i] === 'object' && controls[i].constructor && controls[i] instanceof $) {
+          el = $jq(controls[i]);
+        } else if (typeof controls[i] === 'object' && controls[i].constructor && controls[i] instanceof $jq) {
           el = controls[i].clone(true);
         }
 
@@ -104,7 +105,7 @@ Genoverse.Plugins.trackControls = function () {
           prop = el.data('control');
 
           el.find('option[value=' + (savedConfig[prop] || defaultConfig[prop] || 'all') + ']').attr('selected', true).end().change(function () {
-            $(this).data('track').setConfig($(this).data('control'), this.value);
+            $jq(this).data('track').setConfig($jq(this).data('control'), this.value);
           });
         }
       }

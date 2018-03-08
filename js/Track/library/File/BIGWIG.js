@@ -9,13 +9,13 @@ Genoverse.Track.File.BIGWIG = Genoverse.Track.Graph.Bar.extend({
 
   getData: function (chr, start, end) {
     var model    = this;
-    var deferred = $.Deferred();
+    var deferred = this.$jq.Deferred();
 
     if (!this.bigwigFile) {
       this.bigwigFile = this.bigwigFile || (this.url ? new dallianceLib.URLFetchable(this.url) : new dallianceLib.BlobFetchable(this.track.dataFile));
     }
 
-    var d = $.Deferred().done(function () {
+    var d = this.$jq.Deferred().done(function () {
       model.prop('bwReader').getValues(chr, start, end, function (features, error) {
         if (!error) {
           features.sort(function (a, b) { return a.start - b.start; });

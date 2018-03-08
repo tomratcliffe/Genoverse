@@ -20,7 +20,7 @@ Genoverse.Track.File.BAM = Genoverse.Track.File.extend({
   },
 
   populateMenu: function (feature) {
-    var f = $.extend({ title: feature.readName }, feature);
+    var f = this.$jq.extend({ title: feature.readName }, feature);
 
     delete f.sequence;
     delete f.id;

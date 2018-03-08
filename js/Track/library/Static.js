@@ -2,7 +2,7 @@ Genoverse.Track.Controller.Static = Genoverse.Track.Controller.extend({
   addDomElements: function () {
     this.base();
 
-    this.image = $('<img>').appendTo(this.imgContainer);
+    this.image = this.$jq('<img>').appendTo(this.imgContainer);
 
     this.container.toggleClass('gv-track-container gv-track-container-static').prepend(this.imgContainer);
     this.scrollContainer.add(this.messageContainer).remove();
@@ -26,7 +26,7 @@ Genoverse.Track.Controller.Static = Genoverse.Track.Controller.extend({
 
   makeImage: function (params) {
     if (this.prop('disabled')) {
-      return $.Deferred().resolve();
+      return this.$jq.Deferred().resolve();
     }
 
     var features = this.view.positionFeatures(this.model.findFeatures(params.chr, params.start, params.end), params);
@@ -48,7 +48,7 @@ Genoverse.Track.Controller.Static = Genoverse.Track.Controller.extend({
       }
     }
 
-    return $.Deferred().resolve();
+    return this.$jq.Deferred().resolve();
   }
 });
 
@@ -60,7 +60,7 @@ Genoverse.Track.Model.Static = Genoverse.Track.Model.extend({
 Genoverse.Track.View.Static = Genoverse.Track.View.extend({
   featureMargin : { top: 0, right: 1, bottom: 0, left: 1 },
 
-  positionFeature : $.noop,
+  positionFeature : function () {},
   scaleFeatures   : function (features) { return features; },
 
   draw: function (features, featureContext, labelContext, scale) {

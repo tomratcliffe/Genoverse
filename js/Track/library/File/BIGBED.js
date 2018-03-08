@@ -3,13 +3,13 @@ Genoverse.Track.File.BIGBED = Genoverse.Track.File.BED.extend({
   model : Genoverse.Track.Model.File.BED.extend({
     getData: function (chr, start, end) {
       var model    = this;
-      var deferred = $.Deferred();
+      var deferred = this.$jq.Deferred();
 
       if (!this.bigbedFile) {
         this.bigbedFile = this.bigbedFile || (this.url ? new dallianceLib.URLFetchable(this.url) : new dallianceLib.BlobFetchable(this.track.dataFile));
       }
 
-      var d = $.Deferred().done(function () {
+      var d = this.$jq.Deferred().done(function () {
         model.bwReader.getValues(chr, start, end, function (features, error) {
           if (!error) {
             features.sort(function (a, b) { return a.start - b.start; });

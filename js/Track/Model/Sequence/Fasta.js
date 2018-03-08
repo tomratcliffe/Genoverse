@@ -8,16 +8,17 @@ Genoverse.Track.Model.Sequence.Fasta = Genoverse.Track.Model.Sequence.extend({
   // TODO: Check if URL provided
 
   getData: function (chr, start, end) {
-    var deferred = $.Deferred();
+    var $jq      = this.$jq;
+    var deferred = $jq.Deferred();
 
-    $.when(this.getStartByte()).done(function () {
+    $jq.when(this.getStartByte()).done(function () {
       start = start - start % this.chunkSize + 1;
       end   = end + this.chunkSize - end % this.chunkSize;
 
       var startByte = start - 1 + Math.floor((start - 1) / this.lineLength) + this.startByte;
       var endByte   = end   - 1 + Math.floor((end   - 1) / this.lineLength) + this.startByte;
 
-      $.ajax({
+      $jq.ajax({
         url       : this.parseURL(),
         dataType  : this.dataType,
         context   : this,
@@ -37,7 +38,7 @@ Genoverse.Track.Model.Sequence.Fasta = Genoverse.Track.Model.Sequence.extend({
     }
 
     if (this.startByte === undefined || this.lineLength === undefined) {
-      this.startByteRequest = $.ajax({
+      this.startByteRequest = this.$jq.ajax({
         url       : this.parseURL(),
         dataType  : 'text',
         context   : this,

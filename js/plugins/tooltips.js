@@ -4,23 +4,24 @@
 // released under the MIT license
 
 Genoverse.Plugins.tooltips = function () {
+  var $jq     = Genoverse.$jq;
   var browser = this;
 
   function toggleTooltips(browser, tooltips, action) {
     var offset = browser.superContainer.offset();
 
     tooltips = tooltips || browser.superContainer.find('.gv-tooltip');
-    action   = action   || $(this).toggleClass('gv-active').hasClass('gv-active') ? 'show' : 'hide';
+    action   = action   || $jq(this).toggleClass('gv-active').hasClass('gv-active') ? 'show' : 'hide';
 
     tooltips.each(function () {
-      $(this).tipsy(action).data('tipsy').$tip.appendTo(browser.superContainer).css({ marginTop: -offset.top, marginLeft: -offset.left });
+      $jq(this).tipsy(action).data('tipsy').$tip.appendTo(browser.superContainer).css({ marginTop: -offset.top, marginLeft: -offset.left });
     });
   }
 
   function updateTooltips() {
-    var tooltips = $();
+    var tooltips = $jq();
 
-    $.each([
+    $jq.each([
       [ browser.labelContainer.find('.gv-handle'), { gravity: 'w', fade: true, trigger: 'manual', fallback: 'Reorder tracks by dragging this handle' }],
       [ browser.container.find('.gv-resizer'),     { gravity: 'n', fade: true, trigger: 'manual', fallback: 'Resize track by dragging this handle'   }]
     ], function () {
@@ -53,7 +54,7 @@ Genoverse.Plugins.tooltips = function () {
     this.superContainer.find('.gv-panel-right .gv-button-set[title]').tipsy({ gravity: 'e', fade: true, trigger: 'manual' }).addClass('gv-tooltip');
 
     // In order to force placement of this tooltip to be inside the superContainer boundaries, and just below the karyotype, create a hidden element, positioned where we want the tooltip to appear
-    $('<i class="gv-wrapper-tooltip">').prependTo(this.wrapper).tipsy({
+    $jq('<i class="gv-wrapper-tooltip">').prependTo(this.wrapper).tipsy({
       gravity  : 's',
       fade     : true,
       trigger  : 'manual',

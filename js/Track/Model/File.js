@@ -18,7 +18,7 @@ Genoverse.Track.Model.File = Genoverse.Track.Model.extend({
 
     if (this.isLocal && this.dataFile) {
       var reader   = new FileReader();
-      var deferred = $.Deferred();
+      var deferred = this.$jq.Deferred();
 
       reader.onload = function (e) {
         deferred.done(function () {

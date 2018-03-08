@@ -26,8 +26,8 @@ Genoverse.Track.Chromosome = Genoverse.Track.extend({
   },
 
   getData: function (chr, start, end) {
-    this.receiveData($.extend(true, [], this.browser.genome[chr].bands), chr, start, end);
-    return $.Deferred().resolveWith(this);
+    this.receiveData(this.$jq.extend(true, [], this.browser.genome[chr].bands), chr, start, end);
+    return this.$jq.Deferred().resolveWith(this);
   },
 
   insertFeature: function (feature) {

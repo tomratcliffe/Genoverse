@@ -7,7 +7,7 @@ Genoverse.Track.Model.SequenceVariation = Genoverse.Track.Model.extend({
   },
 
   getData: function (chr, start, end) {
-    var deferred = $.Deferred();
+    var deferred = this.$jq.Deferred();
     var seqData  = this.getSeqModel().checkDataRange(chr, start, end);
 
     this.base(chr, start, end).done(function () {
@@ -22,7 +22,7 @@ Genoverse.Track.Model.SequenceVariation = Genoverse.Track.Model.extend({
   },
 
   insertFeature: function (feature) {
-    return this.base($.extend(feature, {
+    return this.base(this.$jq.extend(feature, {
       end      : feature.start + feature.alt_allele.length - 1,
       length   : feature.alt_allele.length,
       sequence : feature.alt_allele

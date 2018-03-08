@@ -1,7 +1,7 @@
 Genoverse.Track.Model.File.BAM = Genoverse.Track.Model.File.extend({
   getData: function (chr, start, end) {
     var model    = this;
-    var deferred = $.Deferred();
+    var deferred = this.$jq.Deferred();
 
     if (!this.bamFile) {
       if (this.url) {

@@ -22,7 +22,7 @@ Genoverse.Track.Controller.Graph.Line = {
 
     return [
       this.model.sortFeatures(Object.keys(features).map(function (k) {
-        return $.extend(true, {}, features[k], { clickedCoords: features[k].coords.filter(function (c) { return c[0] >= xRange[0] && c[0] <= xRange[1]; }) });
+        return this.$jq.extend(true, {}, features[k], { clickedCoords: features[k].coords.filter(function (c) { return c[0] >= xRange[0] && c[0] <= xRange[1]; }) });
       }))
     ];
   },
@@ -105,7 +105,7 @@ Genoverse.Track.Model.Graph.Line = Genoverse.Track.Model.Graph.extend({
             features.push(feature);
           }
 
-          feature = $.extend({ coords: [[ x, data[i].y ]], start: x, end: x }, data[i]);
+          feature = this.$jq.extend({ coords: [[ x, data[i].y ]], start: x, end: x }, data[i]);
         }
       } else {
         if (feature) {
@@ -191,7 +191,7 @@ Genoverse.Track.View.Graph.Line = Genoverse.Track.View.Graph.extend({
 
     for (var i = 0; i < datasets.list.length; i++) {
       set  = datasets.list[i].name;
-      conf = $.extend({}, defaults, datasets.list[i]);
+      conf = this.$jq.extend({}, defaults, datasets.list[i]);
 
       for (j = 0; j < (datasets.features[set] || []).length; j++) {
         feature = datasets.features[set][j];

@@ -71,7 +71,8 @@ Genoverse.Track.dbSNP = Genoverse.Track.extend({
   },
 
   populateMenu: function (feature) {
-    var deferred = $.Deferred();
+    var $jq      = this.$jq;
+    var deferred = $jq.Deferred();
     var menu     = [{
       title       : '<a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=' + feature.id + '" target="_blank">' + feature.id + '</a>',
       Location    : feature.chr + ':' + feature.start + '-' + feature.end,
@@ -79,11 +80,11 @@ Genoverse.Track.dbSNP = Genoverse.Track.extend({
       Alleles     : feature.alleles.join(', ')
     }];
 
-    $.ajax({
+    $jq.ajax({
       url      : '//rest.ensembl.org/variation/human/' + feature.id + '?population_genotypes=1;content-type=application/json',
       dataType : 'json',
       success  : function (data) {
-        var populationGenotypes = $.grep(data.population_genotypes, function (pop) { return /1000GENOMES.+ALL/.test(pop.population); }); // Only considering 1000 Genomes: ALL population
+        var populationGenotypes = $jq.grep(data.population_genotypes, function (pop) { return /1000GENOMES.+ALL/.test(pop.population); }); // Only considering 1000 Genomes: ALL population
         var frequencies         = {};
         var pop, i, j;
 

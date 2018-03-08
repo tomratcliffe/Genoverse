@@ -15,7 +15,7 @@ Genoverse.Track.Scalebar = Genoverse.Track.extend({
   labels         : true,
   bump           : false,
   resizable      : false,
-  click          : $.noop,
+  click          : function () {},
   colors         : {
     majorGuideLine : '#CCCCCC',
     minorGuideLine : '#E5E5E5'
@@ -23,10 +23,11 @@ Genoverse.Track.Scalebar = Genoverse.Track.extend({
 
   setEvents: function () {
     var browser = this.browser;
+    var $jq     = this.$jq;
 
     function resize() {
-      $('.gv-bg.gv-full-height', browser.container).height(function () {
-        return browser.wrapper.outerHeight(true) - $(this).parents('.gv-track-container').position().top;
+      $jq('.gv-bg.gv-full-height', browser.container).height(function () {
+        return browser.wrapper.outerHeight(true) - $jq(this).parents('.gv-track-container').position().top;
       });
     }
 
@@ -56,13 +57,13 @@ Genoverse.Track.Scalebar = Genoverse.Track.extend({
       divisions = parseInt(toDigit.slice(0, fromDigit.length - i).join(''), 10) - parseInt(fromDigit.slice(0, fromDigit.length - i).join(''), 10);
 
       if (divisions && divisions <= max) {
-        majorUnit = parseInt('1' + $.map(new Array(i), function () { return '0'; }).join(''), 10);
+        majorUnit = parseInt('1' + this.$jq.map(new Array(i), function () { return '0'; }).join(''), 10);
         break;
       }
     }
 
     if (majorUnit === -1) {
-      majorUnit = this.browser.length === 1 ? 1 : parseInt('1' + $.map(new Array(fromDigit.length), function () { return '0'; }).join(''), 10);
+      majorUnit = this.browser.length === 1 ? 1 : parseInt('1' + this.$jq.map(new Array(fromDigit.length), function () { return '0'; }).join(''), 10);
       divisor   = 1;
     } else {
       // Improve things by trying simple multiples of 1<n zeroes>.
@@ -186,7 +187,7 @@ Genoverse.Track.Scalebar = Genoverse.Track.extend({
       start   = Math.round(feature.position[scale].X);
       end     = start + width - 1;
 
-      this.drawFeature($.extend({}, feature, {
+      this.drawFeature(this.$jq.extend({}, feature, {
         x      : start,
         y      : 0,
         width  : Math.ceil(feature.position[scale].width),

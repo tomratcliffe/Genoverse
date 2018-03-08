@@ -14,6 +14,7 @@ Genoverse.Track.Model.Transcript.Ensembl = Genoverse.Track.Model.Transcript.exte
   // See rest.ensembl.org/documentation/info/overlap_region for more details
   parseData: function (data, chr) {
     var model        = this;
+    var $jq          = this.$jq;
     var featuresById = this.featuresById;
     var ids          = [];
 
@@ -45,13 +46,13 @@ Genoverse.Track.Model.Transcript.Ensembl = Genoverse.Track.Model.Transcript.exte
         exon.utr = true;
       } else {
         if (exon.start < featuresById[exon.Parent].cdsStart) {
-          featuresById[exon.Parent].subFeatures.push($.extend({ utr: true }, exon, { end: featuresById[exon.Parent].cdsStart }));
+          featuresById[exon.Parent].subFeatures.push($jq.extend({ utr: true }, exon, { end: featuresById[exon.Parent].cdsStart }));
 
           exon.start = featuresById[exon.Parent].cdsStart;
         }
 
         if (exon.end > featuresById[exon.Parent].cdsEnd) {
-          featuresById[exon.Parent].subFeatures.push($.extend({ utr: true }, exon, { start: featuresById[exon.Parent].cdsEnd }));
+          featuresById[exon.Parent].subFeatures.push($jq.extend({ utr: true }, exon, { start: featuresById[exon.Parent].cdsEnd }));
 
           exon.end = featuresById[exon.Parent].cdsEnd;
         }

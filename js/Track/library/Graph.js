@@ -80,8 +80,8 @@ Genoverse.Track.Controller.Graph = Genoverse.Track.Controller.extend({
       }
     }
 
-    (this.prop('expander') || $()).hide();
-    (this.prop('resizer')  || $()).removeClass('gv-resizer-expander');
+    (this.prop('expander') || this.$jq()).hide();
+    (this.prop('resizer')  || this.$jq()).removeClass('gv-resizer-expander');
 
     return rtn;
   },
@@ -138,7 +138,7 @@ Genoverse.Track.Controller.Graph = Genoverse.Track.Controller.extend({
 
 Genoverse.Track.Model.Graph = Genoverse.Track.Model.extend({
   dataBuffer     : { start: 1, end: 1 },
-  setLabelBuffer : $.noop,
+  setLabelBuffer : function () {},
   sortFeatures   : function (features) { return features.sort(function (a, b) { return a.start - b.start; }); }
 });
 
@@ -199,7 +199,7 @@ Genoverse.Track.Graph = Genoverse.Track.extend({
     this.range       = this.yRange || [ 0, this.height ];
     this.rescaleable = this.rescaleableY;
 
-    if ($.isPlainObject(this.margin)) {
+    if (this.$jq.isPlainObject(this.margin)) {
       if (this.invert) {
         this.marginTop = this.margin.bottom;
         this.margin    = this.margin.top;
@@ -238,15 +238,15 @@ Genoverse.Track.Graph = Genoverse.Track.extend({
     if (!hadController) {
       var scrollContainer = this.prop('scrollContainer');
 
-      this.yAxisPlaceholder = $('<div class="gv-image-container gv-loading">');
-      this.yAxisCanvas      = $('<canvas class="gv-image-container gv-barchart-axis">' ).attr('width', this.width);
-      this.guidelinesCanvas = $('<canvas class="gv-image-container gv-barchart-guide">').attr('width', this.width);
+      this.yAxisPlaceholder = this.$jq('<div class="gv-image-container gv-loading">');
+      this.yAxisCanvas      = this.$jq('<canvas class="gv-image-container gv-barchart-axis">' ).attr('width', this.width);
+      this.guidelinesCanvas = this.$jq('<canvas class="gv-image-container gv-barchart-guide">').attr('width', this.width);
 
       if (this.disabled) {
         this.yAxisCanvas.add(this.guidelinesCanvas).attr('height', 0);
       }
 
-      this.offsetContainer = $('<div class="gv-scroll-container-offset">')
+      this.offsetContainer = this.$jq('<div class="gv-scroll-container-offset">')
         .width(this.width)
         .insertAfter(scrollContainer)
         .append(scrollContainer)
@@ -260,8 +260,8 @@ Genoverse.Track.Graph = Genoverse.Track.extend({
 
   afterSetMVC: function () {
     // Never show the control to switch between auto-height and manual resizing, since its behaviour is not the same here as for standard tracks, due to interactions between resizable and rescaleableY.
-    (this.prop('heightToggler') || $()).addClass('gv-hidden');
-    (this.prop('resizer')       || $()).off('click');
+    (this.prop('heightToggler') || this.$jq()).addClass('gv-hidden');
+    (this.prop('resizer')       || this.$jq()).off('click');
   },
 
   reset: function () {

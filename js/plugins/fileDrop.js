@@ -1,14 +1,16 @@
 Genoverse.Plugins.fileDrop = function () {
+  var $jq = Genoverse.$jq;
+
   this.on('afterInit', function () {
     var browser = this;
     var wrapper = this.wrapper;
 
-    $(window).on('dragenter', function (e) {
+    $jq(window).on('dragenter', function (e) {
       var dataTransfer = e.originalEvent.dataTransfer;
 
-      if (dataTransfer && dataTransfer.types && (dataTransfer.types[0] === 'Files' || dataTransfer.types[1] === 'Files' || dataTransfer.types[2] === 'Files') && !$('.gv-file-drop-total-overlay').length) {
-        var fileDropDiv      = $('<div class="gv-file-drop">').appendTo(wrapper);
-        var totalDropOverlay = $('<div class="gv-file-drop-total-overlay">').prependTo('body');
+      if (dataTransfer && dataTransfer.types && (dataTransfer.types[0] === 'Files' || dataTransfer.types[1] === 'Files' || dataTransfer.types[2] === 'Files') && !$jq('.gv-file-drop-total-overlay').length) {
+        var fileDropDiv      = $jq('<div class="gv-file-drop">').appendTo(wrapper);
+        var totalDropOverlay = $jq('<div class="gv-file-drop-total-overlay">').prependTo('body');
 
         var dragleave = function () {
           fileDropDiv.remove();
@@ -24,7 +26,7 @@ Genoverse.Plugins.fileDrop = function () {
           e.stopPropagation();
 
           // Sort in order to ensure that .bam files are before their .bam.bai files
-          var files = $.map(e.originalEvent.dataTransfer.files, function (f) { return f; }).sort(function (a, b) { return a.name < b.name ? -1 : 1 });
+          var files = $jq.map(e.originalEvent.dataTransfer.files, function (f) { return f; }).sort(function (a, b) { return a.name < b.name ? -1 : 1 });
 
           for (var i = 0; i < files.length; i++) {
             var file  = files[i];

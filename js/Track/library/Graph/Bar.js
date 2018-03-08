@@ -31,6 +31,7 @@ Genoverse.Track.Controller.Graph.Bar = {
       return [];
     }
 
+    var $jq   = this.$jq;
     var start = features[0].start;
     var end   = features[features.length - 1].end;
     var avg   = features[0].start !== features[features.length - 1].start;
@@ -74,7 +75,7 @@ Genoverse.Track.Controller.Graph.Bar = {
         for (i = 0; i < datasets.length; i++) {
           values = getValues(featuresByDataset[datasets[i].name]);
 
-          menu.push($.extend({
+          menu.push($jq.extend({
             Average : values.avg,
             Min     : values.min,
             Max     : values.max
@@ -137,9 +138,9 @@ Genoverse.Track.View.Graph.Bar = Genoverse.Track.View.Graph.extend({
     };
 
     for (var i = 0; i < datasets.list.length; i++) {
-      conf        = $.extend({}, defaults, datasets.list[i]);
+      conf        = this.$jq.extend({}, defaults, datasets.list[i]);
       set         = datasets.list[i].name;
-      setFeatures = $.extend(true, [], datasets.features[set] || []);
+      setFeatures = this.$jq.extend(true, [], datasets.features[set] || []);
 
       if (!setFeatures.length) {
         continue;
@@ -158,7 +159,7 @@ Genoverse.Track.View.Graph.Bar = Genoverse.Track.View.Graph.extend({
           }
 
 
-          f = $.extend(true, {}, bin[0], {
+          f = this.$jq.extend(true, {}, bin[0], {
             height : bin.reduce(function (a, b) { return a + b.height; }, 0) / bin.length,
             end    : bin[bin.length - 1].end
           });
@@ -194,7 +195,7 @@ Genoverse.Track.Graph.Bar = Genoverse.Track.Graph.extend({
   view      : Genoverse.Track.View.Graph.Bar,
   threshold : 500000,
 
-  10000: $.extend( // Switch to line graph at 10000bp region
+  10000: Genoverse.$jq.extend( // Switch to line graph at 10000bp region
     Object.keys(Genoverse.Track.Graph.Line.prototype).reduce(function (hash, key) {
       if (Genoverse.Track.Graph.Line.prototype.hasOwnProperty(key) && !Base.prototype[key]) {
         hash[key] = Genoverse.Track.Graph.Line.prototype[key];
@@ -218,7 +219,7 @@ Genoverse.Track.Graph.Bar = Genoverse.Track.Graph.extend({
       }
     })
   }),
-  50000: $.extend( // Switch to sparser line graph at 50000bp region
+  50000: Genoverse.$jq.extend( // Switch to sparser line graph at 50000bp region
     Object.keys(Genoverse.Track.Graph.Line.prototype).reduce(function (hash, key) {
       if (Genoverse.Track.Graph.Line.prototype.hasOwnProperty(key) && !Base.prototype[key]) {
         hash[key] = Genoverse.Track.Graph.Line.prototype[key];

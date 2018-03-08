@@ -1,4 +1,6 @@
 Genoverse.Plugins.resizer = function () {
+  var $jq = Genoverse.$jq;
+
   this.on('afterSetMVC', 'tracks', function () {
     if (this.prop('resizable') !== true) {
       return;
@@ -10,13 +12,13 @@ Genoverse.Plugins.resizer = function () {
     var height     = this.prop('height');
 
     if (!resizer) {
-      resizer = this.prop('resizer', $('<div class="gv-resizer gv-static"><div class="gv-handle"></div></div>').appendTo(track.prop('container')).draggable({
+      resizer = this.prop('resizer', $jq('<div class="gv-resizer gv-static"><div class="gv-handle"></div></div>').appendTo(track.prop('container')).draggable({
         axis  : 'y',
-        start : function () { $('body').addClass('gv-dragging'); },
+        start : function () { $jq('body').addClass('gv-dragging'); },
         stop  : function (e, ui) {
-          $('body').removeClass('gv-dragging');
+          $jq('body').removeClass('gv-dragging');
           controller.resize(track.prop('height') + ui.position.top - ui.originalPosition.top, true);
-          $(this).css({ top: 'auto', bottom: 0 }); // returns the resizer to the bottom of the container - needed when the track is resized to 0
+          $jq(this).css({ top: 'auto', bottom: 0 }); // returns the resizer to the bottom of the container - needed when the track is resized to 0
         }
       }).on('click', function () {
         var h = track.prop('fullVisibleHeight');

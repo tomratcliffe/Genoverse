@@ -1,7 +1,9 @@
 Genoverse.Plugins.karyotype = function () {
+  var $jq = Genoverse.$jq;
+
   function createKaryotype() {
-    var chromosome = $('<div class="gv-chromosome">');
-    var container  = $('<div class="gv-karyotype-container">').html(chromosome).insertBefore(this.wrapper);
+    var chromosome = $jq('<div class="gv-chromosome">');
+    var container  = $jq('<div class="gv-karyotype-container">').html(chromosome).insertBefore(this.wrapper);
 
     this.karyotype = new Genoverse({
       parent    : this,
@@ -36,7 +38,7 @@ Genoverse.Plugins.karyotype = function () {
 
                 if (f.label) {
                   var left = offset + f.position[this.scale].start + f.position[this.scale].width / 2;
-                  this.container.attr('title', f.label[0]).tipsy({ trigger: 'manual', container: 'body' }).tipsy('show').data('tipsy').$tip.css('left', function () { return left - $(this).width() / 2; });
+                  this.container.attr('title', f.label[0]).tipsy({ trigger: 'manual', container: 'body' }).tipsy('show').data('tipsy').$tip.css('left', function () { return left - $jq(this).width() / 2; });
                 }
 
                 this.hoverFeature = f;
@@ -73,7 +75,7 @@ Genoverse.Plugins.karyotype = function () {
         })
       ],
 
-      addUserEventHandlers: $.noop,
+      addUserEventHandlers: function () {},
 
       afterInit: function () {
         this.updatePosition();
@@ -97,7 +99,7 @@ Genoverse.Plugins.karyotype = function () {
           karyotype.hideTooltip = false;
 
           var scale = karyotype.chromosomeSize / karyotype.width;
-          var axis  = e.type === 'resizestop' ? $(this).data('ui-resizable').axis : undefined;
+          var axis  = e.type === 'resizestop' ? $jq(this).data('ui-resizable').axis : undefined;
           var start = axis === 'e' ? parent.start : Math.max(Math.floor(ui.position.left * scale), 1);
           var end   = axis === 'w' ? parent.end   : e.type === 'dragstop' ? start + parent.length - 1 : Math.floor(ui.helper.outerWidth(true) * scale) + start;
 
@@ -108,14 +110,14 @@ Genoverse.Plugins.karyotype = function () {
 
         if (parent.karyotypeLabel === false) {
           this.labelContainer.remove();
-          this.labelContainer = $();
+          this.labelContainer = $jq();
           container.addClass('gv-no-label');
         }
 
-        this.viewPoint = $('<div class="gv-karyotype-viewpoint-wrapper"><div class="gv-karyotype-viewpoint"></div></div>').appendTo(container).children().on({
+        this.viewPoint = $jq('<div class="gv-karyotype-viewpoint-wrapper"><div class="gv-karyotype-viewpoint"></div></div>').appendTo(container).children().on({
           mousemove : function (e) { karyotype.track.controller.click(e); },
           mouseout  : function (e) {
-            var el = $(e.relatedTarget);
+            var el = $jq(e.relatedTarget);
 
             if (karyotype.viewPoint.is(el) || karyotype.viewPoint.find(el).length || (el.prop('nodeName') === 'IMG' && el.parent().is(karyotype.track.prop('imgContainers')[0]))) {
               return true;
@@ -159,7 +161,7 @@ Genoverse.Plugins.karyotype = function () {
     });
 
     if (!this.loadedPlugins.controlPanel) {
-      $('<li class="gv-unsortable">').height(function (i, h) {
+      $jq('<li class="gv-unsortable">').height(function (i, h) {
         return h + container.height();
       }).prependTo(this.labelContainer);
     }

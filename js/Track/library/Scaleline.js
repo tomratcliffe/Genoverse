@@ -6,7 +6,7 @@ Genoverse.Track.Scaleline = Genoverse.Track.Static.extend({
   unsortable : true,
   fixedOrder : true,
 
-  resize: $.noop,
+  resize: function () {},
 
   makeFirstImage: function () {
     this.prop('scaleline', false);

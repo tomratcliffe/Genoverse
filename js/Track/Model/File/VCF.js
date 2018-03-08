@@ -1,6 +1,6 @@
 Genoverse.Track.Model.File.VCF = Genoverse.Track.Model.File.extend({
   getData: function (chr, start, end) {
-    var deferred = $.Deferred();
+    var deferred = this.$jq.Deferred();
     var model    = this;
 
     if (!this.prop('gz')) {
@@ -32,7 +32,7 @@ Genoverse.Track.Model.File.VCF = Genoverse.Track.Model.File.extend({
   },
 
   makeVCF: function (vcfFile, tbiFile) {
-    var deferred = $.Deferred();
+    var deferred = this.$jq.Deferred();
 
     if (this.cachedVCF) {
       deferred.resolve(this.cachedVCF);

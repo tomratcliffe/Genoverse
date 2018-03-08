@@ -45,7 +45,7 @@ Genoverse.Track = Base.extend({
     }
   },
 
-  setEvents: $.noop,
+  setEvents: function () {},
 
   setDefaults: function () {
     this.config            = this.config         || {};
@@ -98,7 +98,7 @@ Genoverse.Track = Base.extend({
 
     this._defaults = this._defaults || {};
 
-    var settings           = $.extend(true, {}, this.constructor.prototype, this.getSettingsForLength()[1]); // model, view, options
+    var settings           = this.$jq.extend(true, {}, this.constructor.prototype, this.getSettingsForLength()[1]); // model, view, options
     var controllerSettings = { prop: {}, func: {} };
     var trackSettings      = {};
     var i;
@@ -129,7 +129,7 @@ Genoverse.Track = Base.extend({
 
     // If there are configSettings for the track, ensure that any properties in _currentConfig are set for the model/view/controller/track as appropriate.
     // Functions in _currentConfig are accessed via Genoverse.functionWrap, so nothing needs to be done with them here.
-    if (!$.isEmptyObject(this._currentConfig)) {
+    if (!this.$jq.isEmptyObject(this._currentConfig)) {
       var changed = {};
       var type;
 
@@ -184,21 +184,22 @@ Genoverse.Track = Base.extend({
     this.model.setChrProps(); // make sure the data stores for the current chromsome are being used
 
     if (!this.controller || typeof this.controller === 'function') {
-      this.controller = this.newMVC(settings.controller, controllerSettings.func, $.extend(controllerSettings.prop, { model: this.model, view: this.view }));
+      this.controller = this.newMVC(settings.controller, controllerSettings.func, this.$jq.extend(controllerSettings.prop, { model: this.model, view: this.view }));
     } else {
       controllerSettings.prop.threshold = controllerSettings.prop.threshold || this.controller.constructor.prototype.threshold;
-      $.extend(this.controller, controllerSettings.prop, { model: this.model, view: this.view });
+      this.$jq.extend(this.controller, controllerSettings.prop, { model: this.model, view: this.view });
     }
   },
 
   newMVC: function (object, functions, properties) {
     return new (object.extend(
-      $.extend(true, {}, object.prototype, functions, {
-        prop: $.proxy(this.prop, this)
+      this.$jq.extend(true, {}, object.prototype, functions, {
+        prop: this.$jq.proxy(this.prop, this)
       })
     ))(
-      $.extend(properties, {
+      this.$jq.extend(properties, {
         browser : this.browser,
+        $jq     : this.$jq,
         width   : this.width,
         track   : this
       })
@@ -206,6 +207,7 @@ Genoverse.Track = Base.extend({
   },
 
   setLengthMap: function () {
+    var $jq       = this.$jq;
     var mv        = [ 'model', 'view' ];
     var lengthMap = [];
     var models    = {};
@@ -228,7 +230,7 @@ Genoverse.Track = Base.extend({
           if (a[key].toString() !== b[key].toString()) {
             return false;
           }
-        } else if (typeof a[key] === 'object' && !(a[key] instanceof $) && !compare(a[key], b[key])) {
+        } else if (typeof a[key] === 'object' && !(a[key] instanceof $jq) && !compare(a[key], b[key])) {
           return false;
         } else if (a[key] !== b[key]) {
           return false;
@@ -250,7 +252,7 @@ Genoverse.Track = Base.extend({
         key   = parseInt(key, 10);
         value = this[key];
 
-        lengthMap.push([ key, value === false ? { threshold: key, resizable: 'auto', featureHeight: 0, model: Genoverse.Track.Model, view: Genoverse.Track.View } : $.extend(true, {}, value) ]);
+        lengthMap.push([ key, value === false ? { threshold: key, resizable: 'auto', featureHeight: 0, model: Genoverse.Track.Model, view: Genoverse.Track.View } : $jq.extend(true, {}, value) ]);
       }
     }
 
@@ -281,11 +283,11 @@ Genoverse.Track = Base.extend({
       // Ensure that every lengthMap entry has a model and view property, copying them from entries with smaller lengths if needed.
       for (j = i + 1; j < lengthMap.length; j++) {
         if (!lengthMap[i][1].model && lengthMap[j][1].model) {
-          lengthMap[i][1].model = deepCopy.model ? Genoverse.Track.Model.extend($.extend(true, {}, lengthMap[j][1].model.prototype)) : lengthMap[j][1].model;
+          lengthMap[i][1].model = deepCopy.model ? Genoverse.Track.Model.extend($jq.extend(true, {}, lengthMap[j][1].model.prototype)) : lengthMap[j][1].model;
         }
 
         if (!lengthMap[i][1].view && lengthMap[j][1].view) {
-          lengthMap[i][1].view = deepCopy.view ? Genoverse.Track.View.extend($.extend(true, {}, lengthMap[j][1].view.prototype)) : lengthMap[j][1].view;
+          lengthMap[i][1].view = deepCopy.view ? Genoverse.Track.View.extend($jq.extend(true, {}, lengthMap[j][1].view.prototype)) : lengthMap[j][1].view;
         }
 
         if (lengthMap[i][1].model && lengthMap[i][1].view) {
@@ -297,7 +299,7 @@ Genoverse.Track = Base.extend({
     // Now every lengthMap entry has a model and a view class, create instances of those classes.
     for (i = 0; i < lengthMap.length; i++) {
       prevLengthMap = lengthMap[i - 1] ? lengthMap[i - 1][1] : {};
-      settings      = $.extend(true, {}, this.constructor.prototype, lengthMap[i][1]);
+      settings      = $jq.extend(true, {}, this.constructor.prototype, lengthMap[i][1]);
       mvSettings    = { model: { prop: {}, func: {} }, view: { prop: {}, func: {} } };
 
       // Work out which settings belong to models or views
@@ -325,7 +327,7 @@ Genoverse.Track = Base.extend({
             // If the track already has this.models/this.views and the prototype of the new model/view is the same as the value of this.models/this.views for the same length key, reuse that value.
             // This can happen if the track has configSettings and the user changes config but that only affects one of the model and view.
             // Again, reusing the old value stops the need to fetch identical data or draw identical images more than once.
-            if (prevType[lengthMap[i][0]] && compare(prevType[lengthMap[i][0]].constructor.prototype, $.extend({}, settings[type].constructor.prototype, mvSettings[type].prop))) {
+            if (prevType[lengthMap[i][0]] && compare(prevType[lengthMap[i][0]].constructor.prototype, $jq.extend({}, settings[type].constructor.prototype, mvSettings[type].prop))) {
               settings[type] = prevType[lengthMap[i][0]];
             }
           }
@@ -470,7 +472,7 @@ Genoverse.Track = Base.extend({
     }
 
     if (settings.length) {
-      settings = $.extend.apply($, [ true, {} ].concat(settings, { featureFilters: featureFilters }));
+      settings = this.$jq.extend.apply(this.$jq, [ true, {} ].concat(settings, { featureFilters: featureFilters }));
       delete settings.featureFilter;
     }
 

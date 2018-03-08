@@ -1,4 +1,5 @@
 Genoverse.Plugins.controlPanel = function () {
+  var $jq       = Genoverse.$jq;
   var genoverse = this;
 
   this.controls = [
@@ -15,7 +16,7 @@ Genoverse.Plugins.controlPanel = function () {
         'class' : 'gv-scroll-right'
       }],
       init: function (browser) {
-        var el = $(this);
+        var el = $jq(this);
 
         el.find('.gv-scroll-left, .gv-scroll-right').on({
           mousedown : function () { browser.startDragScroll(); },
@@ -57,7 +58,7 @@ Genoverse.Plugins.controlPanel = function () {
         'class' : 'gv-drag-scroll',
         action  : function (browser) {
           browser.setDragAction('scroll');
-          $(this).addClass('gv-active').siblings().removeClass('gv-active');
+          $jq(this).addClass('gv-active').siblings().removeClass('gv-active');
         }
       }, {
         name    : 'Mouse drag action to select a region',
@@ -65,11 +66,11 @@ Genoverse.Plugins.controlPanel = function () {
         'class' : 'gv-drag-select',
         action  : function (browser) {
           browser.setDragAction('select');
-          $(this).addClass('gv-active').siblings().removeClass('gv-active');
+          $jq(this).addClass('gv-active').siblings().removeClass('gv-active');
         }
       }],
       init: function (browser) {
-        $(this).find('.gv-drag-' + browser.dragAction).addClass('gv-active').siblings().removeClass('gv-active');
+        $jq(this).find('.gv-drag-' + browser.dragAction).addClass('gv-active').siblings().removeClass('gv-active');
       }
     },
 
@@ -82,7 +83,7 @@ Genoverse.Plugins.controlPanel = function () {
         'class' : 'gv-wheel-off',
         action  : function (browser) {
           browser.setWheelAction('off');
-          $(this).addClass('gv-active').siblings().removeClass('gv-active');
+          $jq(this).addClass('gv-active').siblings().removeClass('gv-active');
         }
       }, {
         name    : 'Mouse wheel to zoom in and out',
@@ -90,11 +91,11 @@ Genoverse.Plugins.controlPanel = function () {
         'class' : 'gv-wheel-zoom',
         action  : function (browser) {
           browser.setWheelAction('zoom');
-          $(this).addClass('gv-active').siblings().removeClass('gv-active');
+          $jq(this).addClass('gv-active').siblings().removeClass('gv-active');
         }
       }],
       init: function (browser) {
-        $(this).find('.gv-wheel-' + browser.wheelAction).addClass('gv-active').siblings().removeClass('gv-active');
+        $jq(this).find('.gv-wheel-' + browser.wheelAction).addClass('gv-active').siblings().removeClass('gv-active');
       }
     }
   ];
@@ -112,10 +113,10 @@ Genoverse.Plugins.controlPanel = function () {
       var browser = this;
 
       if (!this.tracksLibrary) {
-        this.tracksLibrary = $.grep(this.tracks, function (track) { return track.prototype.name; });
+        this.tracksLibrary = $jq.grep(this.tracks, function (track) { return track.prototype.name; });
       }
 
-      var panel = $(
+      var panel = $jq(
         '<table cellspacing=0 cellpadding=0 class="gv">' +
         '  <tr>' +
         '    <td class="gv-panel gv-panel-left"></td>' +
@@ -127,16 +128,16 @@ Genoverse.Plugins.controlPanel = function () {
 
       this.controlPanel   = panel;
       this.superContainer = this.container;
-      this.container      = $('.gv-canvas-container', this.container);
+      this.container      = $jq('.gv-canvas-container', this.container);
 
       for (var i = 0; i < browser.controls.length; i++) {
         (function (control) {
-          var buttonSet = $('<div class="gv-button-set">').attr('title', control.name).appendTo(browser.superContainer.find('.gv-panel-right'));
+          var buttonSet = $jq('<div class="gv-button-set">').attr('title', control.name).appendTo(browser.superContainer.find('.gv-panel-right'));
           var buttons   = control.buttons || [ control ];
           var el;
 
-          $.each(buttons, function (i, button) {
-            var el = $('<button>' + button.icon + '</button>').addClass(button['class']).attr('title', button.name).appendTo(buttonSet);
+          $jq.each(buttons, function (i, button) {
+            var el = $jq('<button>' + button.icon + '</button>').addClass(button['class']).attr('title', button.name).appendTo(buttonSet);
 
             if (button.action) {
               el.on('click', function () {
@@ -160,20 +161,20 @@ Genoverse.Plugins.controlPanel = function () {
       this.width -= panel.width();
 
       // ESC key to toggle crosshair select to drag mode and close menus
-      $(document).on('keydown', function (e) {
+      $jq(document).on('keydown', function (e) {
         if (e.keyCode === 27) {
           if (panel.find('button.gv-drag-select').hasClass('gv-active')) {
             panel.find('button.gv-drag-scroll').trigger('click');
           }
 
-          $('.gv-menu .gv-close').trigger('click');
+          $jq('.gv-menu .gv-close').trigger('click');
         }
       });
     },
 
     afterInit: function () {
       var browser      = this;
-      var tracksButton = $('<button title="Tracks menu"><i class="fa fa-navicon"></i> Tracks</button>').on('click', function () {
+      var tracksButton = $jq('<button title="Tracks menu"><i class="fa fa-navicon"></i> Tracks</button>').on('click', function () {
         var button = this;
 
         function getTrackTags(track, tags) {
@@ -184,11 +185,11 @@ Genoverse.Plugins.controlPanel = function () {
           return tags;
         }
 
-        if ($(this).hasClass('gv-active')) {
-          $('.gv-menu.gv-tracks-menu .gv-close').trigger('click');
-          $(this).removeClass('gv-active');
+        if ($jq(this).hasClass('gv-active')) {
+          $jq('.gv-menu.gv-tracks-menu .gv-close').trigger('click');
+          $jq(this).removeClass('gv-active');
         } else {
-          var menu = $(this).data('menu');
+          var menu = $jq(this).data('menu');
 
           if (menu) {
             menu.show();
@@ -200,11 +201,11 @@ Genoverse.Plugins.controlPanel = function () {
 
             menu.css({ marginLeft: menu.width() / -2 });
 
-            $('input[placeholder=Search]', menu).on('keyup', function () {
+            $jq('input[placeholder=Search]', menu).on('keyup', function () {
               var str = this.value.toLowerCase();
 
-              $('.gv-tracks-library-item', menu).each(function () {
-                var track = $(this).data('track');
+              $jq('.gv-tracks-library-item', menu).each(function () {
+                var track = $jq(this).data('track');
                 var match = false;
 
                 if (track.name && track.name.toLowerCase().indexOf(str) >= 0) {
@@ -220,23 +221,23 @@ Genoverse.Plugins.controlPanel = function () {
                   }
                 }
 
-                $(this)[match ? 'show' : 'hide']();
+                $jq(this)[match ? 'show' : 'hide']();
               });
             });
 
-            $('.gv-close', menu).on('click', function () {
-              $(button).removeClass('gv-active');
+            $jq('.gv-close', menu).on('click', function () {
+              $jq(button).removeClass('gv-active');
             });
 
-            var availableTracks = $('.gv-available-tracks', menu);
-            var currentTracks   = $('.gv-current-tracks',   menu).data({
-              reload     : function () { $(this).empty().data('listTracks')(); },
+            var availableTracks = $jq('.gv-available-tracks', menu);
+            var currentTracks   = $jq('.gv-current-tracks',   menu).data({
+              reload     : function () { $jq(this).empty().data('listTracks')(); },
               listTracks : function () {
                 for (var i = 0; i < browser.tracks.length; i++) {
                   if (browser.tracks[i].name && browser.tracks[i].removable !== false && !browser.tracks[i].parentTrack) {
                     (function (track) {
-                      $('<div>')
-                        .append($('<i class="gv-remove-track gv-menu-button fa fa-times-circle">').on('click', function () { track.remove(); }))
+                      $jq('<div>')
+                        .append($jq('<i class="gv-remove-track gv-menu-button fa fa-times-circle">').on('click', function () { track.remove(); }))
                         .append('<span>' + track.name + '</span>')
                         .appendTo(currentTracks)
                         .data('track', track)
@@ -250,20 +251,20 @@ Genoverse.Plugins.controlPanel = function () {
               cursor : 'move',
               axis   : 'y',
               handle : 'span',
-              update : $.proxy(browser.updateTrackOrder, browser)
+              update : $jq.proxy(browser.updateTrackOrder, browser)
             });
 
             currentTracks.data('listTracks')();
 
             if (browser.tracksLibrary && browser.tracksLibrary.length) {
-              var tracksLibrary = $.map(browser.tracksLibrary, function (track) {
+              var tracksLibrary = $jq.map(browser.tracksLibrary, function (track) {
                 return track.prototype.name && track.prototype.removable !== false ? [[ track.prototype.name.toLowerCase(), track ]] : undefined;
               }).sort(function (a, b) { return a[0] > b[0] ? 1 : -1; });
 
               for (var i = 0; i < tracksLibrary.length; i++) {
                 (function (track) {
-                  $('<div class="gv-tracks-library-item">').append(
-                    $('<i class="gv-add-track gv-menu-button fa fa-plus-circle"> ').on('click', function () {
+                  $jq('<div class="gv-tracks-library-item">').append(
+                    $jq('<i class="gv-add-track gv-menu-button fa fa-plus-circle"> ').on('click', function () {
                       var sortableTracks = browser.tracks.filter(function (t) { return !(t.fixedOrder || t.unsortable); });
 
                       browser.trackIds = browser.trackIds || {};
@@ -276,16 +277,16 @@ Genoverse.Plugins.controlPanel = function () {
               }
             }
 
-            $(this).data('menu', menu);
+            $jq(this).data('menu', menu);
           }
 
-          $(this).addClass('gv-active');
+          $jq(this).addClass('gv-active');
         }
       });
 
       this.labelContainer.prepend(
-        $('<li class="gv-unsortable">').append(
-          $('<div class="gv-button-set" title="Tracks menu">').append(tracksButton)
+        $jq('<li class="gv-unsortable">').append(
+          $jq('<div class="gv-button-set" title="Tracks menu">').append(tracksButton)
         )
       );
     },

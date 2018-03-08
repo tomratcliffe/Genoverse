@@ -6,12 +6,13 @@ Genoverse.Track.Controller.Stranded = Genoverse.Track.Controller.extend({
       return;
     }
 
+    var $jq           = this.$jq;
     var strand        = this.prop('strand');
     var featureStrand = this.prop('featureStrand');
 
     if (strand === -1) {
-      this._makeImage = this.track.makeReverseImage ? $.proxy(this.track.makeReverseImage, this) : this.makeImage;
-      this.makeImage  = $.noop;
+      this._makeImage = this.track.makeReverseImage ? $jq.proxy(this.track.makeReverseImage, this) : this.makeImage;
+      this.makeImage  = function () {};
     } else {
       strand = this.prop('strand', 1);
 
@@ -29,7 +30,7 @@ Genoverse.Track.Controller.Stranded = Genoverse.Track.Controller.extend({
           forwardTrack : track
         }));
 
-        $.each(track.controller._deferredReverseTrackImages, function (i, args) { track.controller._makeReverseTrackImage.apply(track.controller, args); });
+        $jq.each(track.controller._deferredReverseTrackImages, function (i, args) { track.controller._makeReverseTrackImage.apply(track.controller, args); });
         delete track.controller._deferredReverseTrackImages;
       }, 1);
     }

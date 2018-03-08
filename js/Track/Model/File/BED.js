@@ -66,21 +66,21 @@ Genoverse.Track.Model.File.BED = Genoverse.Track.Model.File.extend({
                 subfeatures.push(subfeature);
               } else if (subfeature.start < feature.thickStart && subfeature.end <= feature.thickEnd) {
                 // left overlap, split subfeature into 2 - thin | thick
-                thinFeature  = $.extend({}, subfeature, { end: feature.thickStart });
-                thickFeature = $.extend({}, subfeature, { start: feature.thickStart, height: thickHeight });
+                thinFeature  = this.$jq.extend({}, subfeature, { end: feature.thickStart });
+                thickFeature = this.$jq.extend({}, subfeature, { start: feature.thickStart, height: thickHeight });
 
                 subfeatures = subfeatures.concat([thinFeature, thickFeature]);
               } else if (subfeature.start >= feature.thickStart && subfeature.end > feature.thickEnd) {
                 // right overlap, split subfeature into 2 - thick | thin
-                thinFeature  = $.extend({}, subfeature, { start: feature.thickEnd });
-                thickFeature = $.extend({}, subfeature, { end: feature.thickEnd, height: thickHeight });
+                thinFeature  = this.$jq.extend({}, subfeature, { start: feature.thickEnd });
+                thickFeature = this.$jq.extend({}, subfeature, { end: feature.thickEnd, height: thickHeight });
 
                 subfeatures = subfeatures.concat([ thickFeature, thinFeature ]);
               }else{
                 // thickBlock lies within subfeature, split into 3 - thin | thick | thin
                 // the least possible case but lets be prepared for the outliers
-                thinFeature1 = $.extend({}, subfeature, { end: feature.thickStart });
-                thinFeature2 = $.extend({}, subfeature, { start: feature.thickEnd });
+                thinFeature1 = this.$jq.extend({}, subfeature, { end: feature.thickStart });
+                thinFeature2 = this.$jq.extend({}, subfeature, { start: feature.thickEnd });
                 thickFeature = { start: feature.thickStart, end: feature.thickEnd, height: thickHeight };
 
                 subfeatures = subfeatures.concat([ thinFeature1, thickFeature, thinFeature2 ]);
