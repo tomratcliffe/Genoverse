@@ -1,9 +1,14 @@
 var webpack = require('webpack');
 
 module.exports = {
-  entry   : __dirname + '/index.js',
-  output  : { filename: 'js/genoverse.min.js' },
-  plugins : [
+  entry: {
+    'min'              : __dirname + '/index.js',
+    'min.jqnoconflict' : __dirname + '/noConflict.js',
+  },
+  output: {
+    filename: 'js/genoverse.[name].js',
+  },
+  plugins: [
     new webpack.ProvidePlugin({
       $      : __dirname + '/js/lib/jquery.js',
       jQuery : __dirname + '/js/lib/jquery.js'

@@ -1,4 +1,4 @@
-var $jq        = $.noConflict(true);
+var $jq       = window.genoverseJQueryNoConflict ? jQuery.noConflict(true) : jQuery;
 var Genoverse = Base.extend({
   // Defaults
   urlParamTemplate   : 'r=__CHR__:__START__-__END__', // Overwrite this for your URL style
