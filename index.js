@@ -30,6 +30,7 @@ require(__dirname + '/js/Track/Model/Stranded.js');
 require(__dirname + '/js/Track/library/Graph.js');
 require(__dirname + '/js/Track/library/Graph/Line.js');
 require(__dirname + '/js/Track/library/Graph/Bar.js'); // Graph.Bar depends on Graph.Line
+require(__dirname + '/js/Track/library/Graph/Scatter.js');
 
 require(__dirname + '/js/Track/Controller/Sequence.js');
 require(__dirname + '/js/Track/Model/Sequence.js');

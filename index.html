@@ -32,17 +32,25 @@
 
     <script type="text/javascript" src="js/genoverse.min.js"></script>
     <script>
+      const exampleScatterPlot = Genoverse.Track.Graph.Scatter.extend({
+        url: 'test-bed.json',
+        yRange: [-2, 2],
+        height: 200,
+        rescaleableY: false
+      });
+
+
       new Genoverse({
         container : '#genoverse', // Where to inject Genoverse (css/jQuery selector/DOM element)
         // If no genome supplied, it must have at least chromosomeSize, e.g.:
         // chromosomeSize : 249250621, // chromosome 1, human
         genome    : 'grch38', // see js/genomes/
-        chr       : 13,
-        start     : 32296945,
-        end       : 32370557,
+        chr       : 15,
+        start     : 48220633,
+        end       : 48843588,
         plugins   : [ 'controlPanel', 'karyotype', 'trackControls', 'resizer', 'focusRegion', 'fullscreen', 'tooltips', 'fileDrop' ],
         tracks    : [
-          Genoverse.Track.Scalebar,
+        Genoverse.Track.Scalebar,
           Genoverse.Track.extend({
             name       : 'Sequence',
             controller : Genoverse.Track.Controller.Sequence,
@@ -59,7 +67,8 @@
             model           : Genoverse.Track.Model.extend({ dataRequestLimit : 5000000 }),
             setFeatureColor : function (f) { f.color = '#AAA'; }
           }),
-          Genoverse.Track.dbSNP
+          Genoverse.Track.dbSNP,
+          exampleScatterPlot,
         ]
       });
     </script>
