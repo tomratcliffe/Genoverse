@@ -1,3 +1,4 @@
+var runningInModule = Boolean(typeof module === 'object' && typeof module.exports === 'object');
 var Genoverse = Base.extend({
   // Defaults
   urlParamTemplate   : 'r=__CHR__:__START__-__END__', // Overwrite this for your URL style
@@ -55,6 +56,11 @@ var Genoverse = Base.extend({
 
   loadGenome: function () {
     if (typeof this.genome === 'string') {
+      if(runningInModule) {
+        this.genome = genomeHash[this.genome];
+        return;
+      }
+
       var genomeName = this.genome;
 
       return $.ajax({
@@ -98,6 +104,10 @@ var Genoverse = Base.extend({
         function done() {
           browser.loadedPlugins[plugin] = browser.loadedPlugins[plugin] || 'script';
           deferred.resolve(plugin);
+        }
+
+        if(runningInModule) {
+          return done();
         }
 
         if (Genoverse.Plugins[plugin].noCSS || $('link[href="' + css + '"]').length) {
@@ -1572,6 +1582,10 @@ var Genoverse = Base.extend({
 });
 
 $(function () {
+  if(runningInModule) {
+    return Genoverse.ready.resolve();
+  }
+
   if ($('link[href^="' + Genoverse.origin + 'css/genoverse.css"]').length) {
     Genoverse.ready.resolve();
   } else {
@@ -1579,8 +1593,8 @@ $(function () {
   }
 });
 
-window.Genoverse = Genoverse;
-
-if (typeof module === 'object' && typeof module.exports === 'object') {
+if (runningInModule) {
   module.exports = Genoverse;
+} else {
+  window.Genoverse = Genoverse;
 }
