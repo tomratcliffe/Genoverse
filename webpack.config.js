@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
   mode    : 'development',
   entry   : __dirname + '/index.js',
-  output  : { filename: 'genoverse.min.js', path: __dirname + '/js' },
+  output  : { filename: 'genoverse.min.js', path: __dirname + '/build' },
   devtool : 'source-map',
   module: {
     rules: [
